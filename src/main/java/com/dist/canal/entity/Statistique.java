@@ -2,6 +2,7 @@ package com.dist.canal.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 @Entity
 @Table(name = "statistique")
 public class Statistique {
@@ -20,15 +22,19 @@ public class Statistique {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String distprinc;
     private String numdist;
     private String nomdist;
-    private String createAt;
+    @Temporal(TemporalType.DATE)
+    private Date createAt;
     private String cmouvmt;
-    private String debabo;
-    private String finabo;
+    @Temporal(TemporalType.DATE)
+    private Date debabo;
+    @Temporal(TemporalType.DATE)
+    private Date finabo;
     private String numcarte;
-    private String commission;
-    private String montant;
+    private BigDecimal commission;
+    private BigDecimal montant;
     private String larticle;
 
 }

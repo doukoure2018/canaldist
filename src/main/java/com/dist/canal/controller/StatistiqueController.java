@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -26,17 +27,18 @@ public class StatistiqueController {
     private final StatistiqueService statistiqueService;
     private final AuthService authService;
 
-    @PostMapping("/import")
+    @PostMapping(value = "/import", consumes = {"multipart/form-data"})
     public ResponseEntity<HttpResponse> importStatistique(
             @AuthenticationPrincipal UserDto user,
-            @RequestParam("file") MultipartFile importFile
-    ) {
-        statistiqueService.saveState(importFile);
+            @RequestParam("file") MultipartFile file
+    )  {
+        statistiqueService.saveState(file);
         return ResponseEntity.ok(
                 HttpResponse.builder()
                         .timeStamp(now().toString())
                         .data(Map.of(
-                                "user", authService.getUserByEmail(user.getEmail())))
+                                "user", authService.getUserByEmail(user.getEmail())
+                                ))
                         .message("Statistiques Imported Successfully")
                         .status(CREATED)
                         .statusCode(CREATED.value())

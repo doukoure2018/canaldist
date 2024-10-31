@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -14,14 +12,15 @@ import java.util.Date;
 @Data
 public class StatistiqueDto {
     private Long id;
+    private String distprinc;
     private String numdist;
     private String nomdist;
-    private String createAt;
+    private Date createAt;
     private String cmouvmt;
-    private String debabo;
-    private String finabo;
+    private Date debabo;
+    private Date finabo;
     private String numcarte;
-    private String commission;
-    private String montant;
+    private BigDecimal commission;
+    private BigDecimal montant;
     private String larticle;
 }

@@ -33,6 +33,7 @@ public class ImportConfig {
         customerImport.setStartRow(1);
         customerImport.setDataClazz(ImportFileDto.class);
         List<CellConfig> customerImportCellConfigs = new ArrayList<>();
+        customerImportCellConfigs.add(new CellConfig(0, ColumnName.DISTPRINC.name()));
         customerImportCellConfigs.add(new CellConfig(1, ColumnName.NUMDIST.name()));
         customerImportCellConfigs.add(new CellConfig(2, ColumnName.NOMDIST.name()));
         customerImportCellConfigs.add(new CellConfig(12, ColumnName.DATE.name()));

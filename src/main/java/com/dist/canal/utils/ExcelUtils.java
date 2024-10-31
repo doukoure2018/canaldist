@@ -10,7 +10,10 @@ import org.springframework.util.ObjectUtils;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -395,6 +398,8 @@ public class ExcelUtils {
         return Enum.valueOf(clazz, valueStr);
     }
 
+    private static final LocalDate EXCEL_EPOCH = LocalDate.of(1900, 1, 1);
+
     private static Date parseDate(Object value) {
         String[] formatsDate = {"yyyy-MM-dd HH:mm:ss", "dd/MM/yyyy"};
 
@@ -403,26 +408,24 @@ public class ExcelUtils {
         }
 
         String dateStr = value.toString();
-        for (String format : formatsDate) {
-            Date date = null;
+        DateFormat dateFormat;
 
+        for (String format : formatsDate) {
             try {
-                DateFormat dateFormat = new SimpleDateFormat(format);
-                date = dateFormat.parse(dateStr);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (ObjectUtils.isEmpty(date)) {
-                return date;
+                dateFormat = new SimpleDateFormat(format);
+                return dateFormat.parse(dateStr);
+            } catch (ParseException ignored) {
+                // This will be ignored as we will try other formats
             }
         }
 
         try {
-            Date date = (Date) value;
-            return date;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new Date();
+            // the value might be a number representing the days since 1900-01-01
+            // since this is the way Excel stores dates
+            int daysSinceEpoch = Integer.parseInt(dateStr);
+            return Date.from(EXCEL_EPOCH.plusDays(daysSinceEpoch - 2).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Unable to parse date: " + dateStr, e);
         }
     }
 

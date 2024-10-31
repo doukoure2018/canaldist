@@ -5,5 +5,5 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface StatistiqueService {
 
-    StatistiqueDto saveState(MultipartFile importFile);
+    StatistiqueDto saveState(MultipartFile file);
 }
